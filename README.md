@@ -1,6 +1,3 @@
-Sure, here's a basic structure for the documentation of the `wled_adapter` package. You can fill in the details as needed.
-
-```markdown
 # WLED Adapter Package
 
 ## Overview
