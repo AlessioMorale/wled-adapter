@@ -17,4 +17,3 @@ This example illustrates the following workflow:
 ```bash
 python3 serial_example.py /dev/ttyACM0
 ```
-

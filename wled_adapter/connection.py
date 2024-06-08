@@ -1,14 +1,16 @@
 from abc import ABC, abstractmethod
-from typing import override
 from time import sleep
+from typing import override
+
 from loguru import logger
 from serial import Serial
 from serial.threaded import LineReader, Protocol, ReaderThread
 from serial.tools import list_ports
 
+
 class Connection(ABC):
     """Abstract base class for a connection."""
-    
+
     def __init__(self):
         pass
 
@@ -16,12 +18,12 @@ class Connection(ABC):
     def send(self, data: str) -> str:
         """Send data over the connection."""
         pass
-    
+
     @abstractmethod
     def receive(self) -> str:
         """Receive data from the connection."""
         pass
-    
+
     @abstractmethod
     def get_wled_status(self) -> str:
         """Get the status of the connected device."""
@@ -38,30 +40,31 @@ class Connection(ABC):
 
 class SerialReader(LineReader):
     """Serial reader class for reading lines from a serial connection."""
-    
+
     def __init__(self):
         super(SerialReader, self).__init__()
         self.received_data: list[str] = []
 
     def connection_made(self, transport):
         super(SerialReader, self).connection_made(transport)
-        logger.info('port opened')
+        logger.info("port opened")
 
     def handle_line(self, data):
-        logger.trace('line received: {}\n'.format(repr(data)))
+        logger.trace("line received: {}\n".format(repr(data)))
         self.received_data.append(data)
 
     def connection_lost(self, exc):
         if exc:
             logger.error(exc)
-        logger.info('port closed')
+        logger.info("port closed")
+
 
 class SerialConnection(Connection):
     """Serial connection class for communicating with a device over a serial port."""
-    
-    TIMEOUT=0.05
-    COMMAND_WAIT=0.005
-    
+
+    TIMEOUT = 0.05
+    COMMAND_WAIT = 0.005
+
     @override
     def __init__(self, port: str, baudrate: int):
         super(SerialConnection, self).__init__()
@@ -86,7 +89,7 @@ class SerialConnection(Connection):
     def _send_string(self, data: str) -> None:
         """Send a string over the serial connection."""
         self._protocol.write_line(data)
-                               
+
     def _retrieve_response(self):
         """Retrieve the response from the serial connection."""
         timeout = 20
@@ -95,13 +98,13 @@ class SerialConnection(Connection):
             sleep(self.COMMAND_WAIT)
         ret = self._protocol.received_data.pop()
         return ret
-    
+
     def _clear_buffer(self):
         """Clear the buffer of received data."""
         self._protocol.received_data.clear()
-    
+
     @classmethod
-    def available_ports(cls, regexp: str = None, include_links = True) -> list[any]:
+    def available_ports(cls, regexp: str = None, include_links=True) -> list[any]:
         """Get a list of available serial ports."""
         return list_ports.grep(regexp, include_links)
 
@@ -116,7 +119,9 @@ class SerialConnection(Connection):
     @override
     def start(self):
         """Start the serial connection."""
-        self._serial = Serial(self._port,  baudrate=self._baudrate, timeout=SerialConnection.TIMEOUT)
+        self._serial = Serial(
+            self._port, baudrate=self._baudrate, timeout=SerialConnection.TIMEOUT
+        )
         self._protocol = ReaderThread(self._serial, SerialReader).__enter__()
 
     @override

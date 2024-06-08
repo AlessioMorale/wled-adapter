@@ -1,9 +1,8 @@
-from typing import Union
-
-from wled_adapter.segment import Segment
-from wled_adapter.connection import Connection
-from wled_adapter.state import State, Seg, WledData
 from colour import Color
+
+from wled_adapter.connection import Connection
+from wled_adapter.segment import Segment
+from wled_adapter.state import Seg, State, WledData
 
 
 class Adapter:
@@ -11,11 +10,14 @@ class Adapter:
     Represents an adapter for controlling WLED segments using a specified interface.
 
     Args:
-        interface (Connection): The interface used for communication with the WLED device.
+        interface (Connection): The interface used for communication with the WLED
+        device.
 
     Attributes:
-        _interface (Connection): The interface used for communication with the WLED device.
-        _segments (dict[int, Segment]): A dictionary of segments, where the key is the segment ID and the value is a Segment object.
+        _interface (Connection): The interface used for communication with the WLED
+        device.
+        _segments (dict[int, Segment]): A dictionary of segments, where the key is the
+        segment ID and the value is a Segment object.
 
     """
 
@@ -44,7 +46,8 @@ class Adapter:
 
     def initialise_segments(self):
         """
-        Initializes the segments based on the current status received from the WLED device.
+        Initializes the segments based on the current status received from the WLED
+        device.
         """
         state = self.get_state()
         # reset the current segment state
