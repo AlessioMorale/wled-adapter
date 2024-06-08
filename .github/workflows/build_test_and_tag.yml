@@ -2,6 +2,8 @@ name: Build, Test, create SemVer tag
 
 on:
   push:
+    tags:
+      - "**"
     branches:
       - main
 
@@ -50,12 +52,16 @@ jobs:
       - uses: actions/upload-artifact@v4.3.3
         with:
           name: distfiles
-          path: dist/
+          path: |
+            dist/
+            pyproject.toml
           if-no-files-found: error
 
   tag_a_release:
     needs: build_and_test
     runs-on: ubuntu-latest
+    # only executed for commits
+    if: github.event_name == 'push' && !startsWith(github.ref, 'refs/tags')
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -71,3 +77,33 @@ jobs:
         with:
           github_token: ${{ steps.app-token.outputs.token }}
           default_bump: patch
+
+  pypi-publish:
+    name: Publish release to PyPI
+    runs-on: ubuntu-latest
+    # only executed for TAGS
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+    strategy:
+      matrix:
+        environment: [pypi-test]
+
+    environment: ${{ matrix.environment }}
+
+    permissions:
+      # IMPORTANT: this permission is mandatory for trusted publishing
+      id-token: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      # build and test the release package
+      - uses: actions/download-artifact@v4.3.3
+        with:
+          name: distfiles
+          if-no-files-found: error
+      - name: Display the artifacts files
+        run: ls -R ./dist/
+      # publish the release package to PyPI
+      - name: Publish package distribution
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: ${{ vars.REPOSITORY_URL }}
