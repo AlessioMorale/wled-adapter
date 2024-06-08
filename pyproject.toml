@@ -1,6 +1,9 @@
 [tool.poetry]
-license = { text = "MIT" }
+version = "0.0.0"
+license = "MIT"
 name = "wled-adapter"
+homepage = "https://www.github.com/alessiomorale/wled-adapter"
+repository = "https://www.github.com/alessiomorale/wled-adapter"
 description = "A package to interact with WLED devices"
 authors = ["Alessio Morale <alessiomorale@gmail.com>"]
 readme = "README.md"
