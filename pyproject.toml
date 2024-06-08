@@ -9,7 +9,7 @@ authors = ["Alessio Morale <alessiomorale@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = "<4.0,>=3.8"
 dataclasses-json = "^0.6.6"
 pyserial = "^3.5"
 loguru = "^0.7.2"
