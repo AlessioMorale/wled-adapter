@@ -1,15 +1,16 @@
 from dataclasses import dataclass
-from typing import List, Union, Optional
-from dataclasses_json import config, dataclass_json, DataClassJsonMixin
+from typing import List, Optional, Union
+
+from dataclasses_json import DataClassJsonMixin, config, dataclass_json
+
 
 class JsonSerializableMixin(DataClassJsonMixin):
     """
     Mixin class for JSON serialization and deserialization of data classes.
     """
 
-    dataclass_json_config = config(
-        exclude=lambda f: f is None
-    )["dataclasses_json"]
+    dataclass_json_config = config(exclude=lambda f: f is None)["dataclasses_json"]
+
 
 @dataclass
 class Leds(JsonSerializableMixin):
@@ -23,6 +24,7 @@ class Leds(JsonSerializableMixin):
     pwr: Optional[int] = None
     maxpwr: Optional[int] = None
     maxseg: Optional[int] = None
+
 
 @dataclass_json
 @dataclass
@@ -49,6 +51,7 @@ class Info(JsonSerializableMixin):
     btype: Optional[str] = None
     mac: Optional[str] = None
 
+
 @dataclass
 class Nl(JsonSerializableMixin):
     """
@@ -61,6 +64,7 @@ class Nl(JsonSerializableMixin):
     tbri: Optional[int] = None
     rem: Optional[int] = None
 
+
 @dataclass
 class Udpn(JsonSerializableMixin):
     """
@@ -71,6 +75,7 @@ class Udpn(JsonSerializableMixin):
     recv: Optional[bool] = None
     sgrp: Optional[int] = None
     rgrp: Optional[int] = None
+
 
 @dataclass
 class Seg(JsonSerializableMixin):
