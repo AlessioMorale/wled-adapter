@@ -47,7 +47,7 @@ jobs:
         run: poetry build
       - name: Test
         run: poetry run pytest -rA
-      - uses: actions/upload-artifact@v4.3.3
+      - uses: actions/upload-artifact@v4.3.5
         with:
           name: distfiles
           path: dist/
